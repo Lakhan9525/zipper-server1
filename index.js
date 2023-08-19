@@ -19,6 +19,12 @@ const app = express();
 //     })
 // );
 app.options('*', cors()); // Respond to all OPTIONS requests
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    // You might also need to include other headers like 'Access-Control-Allow-Methods' and 'Access-Control-Allow-Headers'
+    next();
+  });
 
 
 app.use(bodyParser.json());
