@@ -15,7 +15,7 @@ const app = express();
 
 app.use(
     cors({
-      origin: "*",
+      origin: "https://creative-twilight-6393da.netlify.app",
       methods: "GET,POST,PATCH,DELETE",
       credentials: true,
     })
