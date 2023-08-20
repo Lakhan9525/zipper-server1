@@ -27,7 +27,8 @@ const app = express();
 app.use(
     cors({
         credentials: true,
-        origin: "http://127.0.0.1:5174",
+        //origin: "http://127.0.0.1:5174",
+        origin: "*",
     })
 );
 //app.options('*', cors()); // Respond to all OPTIONS requests
