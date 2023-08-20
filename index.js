@@ -24,20 +24,22 @@ const app = express();
 
 
 
-app.use(
-    cors({
-        credentials: true,
-        origin: "http://127.0.0.1:5174",
+// app.use(
+//     cors({
+//         credentials: true,
+//         origin: "http://127.0.0.1:5174",
         
-    })
-);
-//app.options('*', cors()); // Respond to all OPTIONS requests
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    // You might also need to include other headers like 'Access-Control-Allow-Methods' and 'Access-Control-Allow-Headers'
-    next();
-  });
+//     })
+// );
+
+app.use(cors());
+
+// app.use((req, res, next) => {
+//     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+//     res.setHeader('Access-Control-Allow-Credentials', 'true');
+//     // You might also need to include other headers like 'Access-Control-Allow-Methods' and 'Access-Control-Allow-Headers'
+//     next();
+//   });
 
 
 app.use(bodyParser.json());
@@ -130,7 +132,7 @@ app.get("/api/channels", async (req, res) => {
             name: channel.name,
         }));
 
-        res.json(channels);
+        res.json({channels});
     } catch (error) {
         console.error("Error fetching channels:", error);
         res.status(500).json({ error: "An error occurred." });
@@ -220,7 +222,7 @@ async function sendMail(senderName, senderEmail, senderMessage) {
             text: `Message from ${senderName}: ${senderMessage}`,
         };
 
-        const result = await transport.sendMail(mailOptions);
+        const result = await transport.sendMail({mailOptions});
         return result;
     } catch (error) {
         return error;
@@ -232,7 +234,7 @@ app.post("/api/sendmail", (req, res) => {
     const senderEmail = req.body.email;
     const senderMessage = req.body.message;
 
-    sendMail(senderName, senderEmail, senderMessage)
+    sendMail({senderName, senderEmail, senderMessage})
     .then(result =>  console.log("Message Sent"))
     .catch(error => console.log(error.message));
 });
