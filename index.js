@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin: "https://c1067-zss.vercel.app/",
+    origin: "https://c1067-zss.vercel.app",
   })
 );
 app.use(bodyParser.json());
