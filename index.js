@@ -527,6 +527,69 @@ app.get("/api/profile", (req, res) => {
   }
 });
 
+app.post("/api/create-checkout-session", async (req, res) => {
+  const { title, features, price } = req.body
+  const line_items = [{
+    price_data: {
+      currency: "inr",
+      product_data: {
+        name: title,
+        description: features,
+        metadata: {
+          id: title,
+        },
+      },
+      unit_amount: price * 100,
+    },
+    quantity: 1
+  }];
+
+  const session = await stripe.checkout.sessions.create({
+    shipping_address_collection: { allowed_countries: ["US", "IN"] },
+    shipping_options: [
+      {
+        shipping_rate_data: {
+          type: "fixed_amount",
+          fixed_amount: { amount: 200, currency: "inr" },
+          display_name: "Free shipping",
+          delivery_estimate: {
+            minimum: { unit: "business_day", value: 5 },
+            maximum: { unit: "business_day", value: 7 },
+          },
+        },
+      },
+    ],
+    line_items,
+    mode: "payment",
+    success_url: `${req.headers.origin}/success?sub=${title}?payment_status=success`,
+    cancel_url: `${req.headers.origin}/plans`,
+  });
+  res.send({ url: session.url, success: session.success_url, cancel: session.cancel_url });
+});
+
+app.put('/api/subscription', async (req, res) => {
+  const { id, subscription } = req.body
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(id, { subscription }, { new: true })
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+    return res.json(updatedUser)
+  }
+  catch (error) {
+    console.error('Error updating subscription:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+
+
+})
+
+
+
+
+
+
 // Get user data route
 app.get("/api/users", async (req, res) => {
   try {
