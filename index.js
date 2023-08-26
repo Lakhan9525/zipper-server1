@@ -519,9 +519,11 @@ app.get("/api/profile", (req, res) => {
       }
 
       res.json(profileData);
+
     });
   } else {
     res.json(null);
+    
   }
 });
 
