@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:5173",
+    origin: "https://c1067-zss.vercel.app/",
   })
 );
 app.use(bodyParser.json());
@@ -523,7 +523,7 @@ app.get("/api/profile", (req, res) => {
     });
   } else {
     res.json(null);
-    
+
   }
 });
 
